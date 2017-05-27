@@ -2,17 +2,22 @@
     <div id="wrap">
         <div class="alet_container">
             <div class="contain">
-                <section class="tip_text_container">
-                    <div class="tip_icon">
-                        <span></span>
-                        <span></span>
+                <div class="title">{{title}}</div>
+                <div class="page" id="scroll">
+                    <div class="pageScroll">
+                        <div class="input-wrap">
+                            <span>血尿酸值</span><input type="text" placeholder="请输入血尿酸值" maxlength="10"><span>μmol/L</span>
+                        </div>
+                        <div class="tip">
+                            温馨提示：<br>
+                            以每日早上空腹时检测尿酸为准确，建议使用优客推荐的百捷尿酸仪进行指尖血尿酸检测。
+                        </div>
                     </div>
-                    <p class="tip_text">{{alertText}}</p>
-                </section>
+                </div>
+                <div class="btn-group">
+                    <button class="cancel" @click="closeTip">取消</button><button class="confirm">确定</button>
+                </div>
             </div>
-        </div>
-        <div class="confrim" @click="closeTip">
-            <i>确认</i>
         </div>
     </div>
 </template>
@@ -28,7 +33,7 @@
                 scroll: ''
             };
         },
-        props: ['alertText'],
+        props: ['title'],
         methods: {
             closeTip() {
                 this.$emit('closeTip');
@@ -36,7 +41,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                this.scroll = new BScroll(document.getElementById('wrap'), {probeType: 2});
+                this.scroll = new BScroll(document.getElementById('scroll'), {probeType: 2});
             });
         }
     };
@@ -44,12 +49,6 @@
 
 <style lang="scss" scoped>
     @import './mixin';
-	@keyframes tipMove{
-       0%   { transform: scale(1) }
-       35%  { transform: scale(.8) }
-       70%  { transform: scale(1.1) }
-       100% { transform: scale(1) }
-    }  
     #wrap{
         position: fixed;
         top: 0;
@@ -62,85 +61,89 @@
         background: rgba(0, 0, 0, 0.5);
         overflow: hidden;
     }
-    /* .alet_container{
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    .alet_container{
         width: 100%;
         height: 100%;
-        z-index: 200;
-        // background: rgba(0, 0, 0, 0.5);
-        overflow: hidden;
-    } */
-    .contain{
-        width: 100%;
-        min-height: 100%;
-        background-color: rgba(255,255,255,0.8);
-        .tip_text_container{
-            width: 100%;
-            animation: tipMove .4s ;
-            padding-top: 0.85rem;
-            padding-bottom: 2rem;
-         
-            .tip_icon{
-                @include wh(3rem, 3rem);
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-                border: 0.15rem solid #f8cb86;
-                border-radius: 50%;
-                span:nth-of-type(1){
-                    @include wh(3rem, 3rem);
-                    position: relative;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background-color: #f8cb86;
-                }
-                span:nth-of-type(2){
-                    @include wh(3rem, 3rem);
-                    position: relative;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    border: 1px;
-                    border-radius: 50%;
-                    margin-top: .2rem;
-                    background-color: #f8cb86;
-                }
-            }
-            .tip_text{
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 3rem;
-                line-height: .9rem;
-                text-align: center;
-                margin-top: .8rem;
-                padding: 0 .4rem;
-            }
-        }
     }
-    
-    .confrim{
-        position: fixed;
+    .contain{
+        position: relative;
         left: 50%;
-        transform: translateX(-50%);
-        bottom: 0;
-        z-index: 200;
-        width: 4rem;
-        height: 1.5rem;
-        i{
-            @include wh(4rem, 1.5rem);
-            margin: 0 auto;
-            display: inline-block;
-            font-weight: bold;
-            font-style: normal;
-            background-color: #4cd964;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 8.8rem;
+        min-height: 8.2rem;
+        border-radius: 0.2rem;
+        background-color: rgba(255,255,255,1);
+
+       .title{
+            width: 100%;
+            height: 1.3rem;
             text-align: center;
-            line-height: 1.5rem;
-            border: 1px;
-            border-radius: 0.25rem;
-        }
+            line-height: 1.3rem;
+            font-size: 0.4rem;
+            font-weight: 700;
+            color: #555;
+       }
+       .page{
+            box-sizing: border-box;
+            width: 100%;
+            max-height: 12rem;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 0.65rem 0.65rem 0 0.65rem;
+            overflow: hidden;
+
+            .input-wrap{
+                padding: 0.27rem 0;
+                span{
+                    display: inline-block;
+                    height: 1.1rem;
+                    line-height: 1.1rem;
+                    font-size: 0.4rem;
+                    font-weight: 700;
+                    color: #555;
+                }
+                input{
+                    box-sizing: border-box;
+                    display: inline-block;
+                    margin: 0 0.2rem;
+                    padding-left: 0.4rem;
+                    width: 3.8rem;
+                    height: 1.1rem;
+                    font-size: 0.4rem;
+                    font-weight: 700;
+                    border: 1px solid #ccc;
+                    border-radius: 0.2rem;
+                }
+            }
+            .tip{
+                line-height: 0.7rem;
+                font-size: 0.35rem;
+                font-weight: 700;
+                color: #888;
+                padding-bottom: 0.92rem;
+            }
+       }
+       .btn-group{
+            height: 1.68rem;
+            display: flex;
+            button{
+                flex: 1;
+                height: 100%;
+                line-height: 1.68rem;
+                font-size: 0.46rem;
+                font-weight: 700;
+                color: #ae8330;
+                background: #fff;
+                border:none;
+                &.cancel{
+                    border-right: 1px solid #ccc;
+                    border-radius: 0 0 0 0.2rem;
+                }
+                &.confirm{
+                    border-radius: 0 0 0.2rem 0;
+                }
+            }
+       }
     }
 </style>

@@ -11,6 +11,11 @@ import IScrollView from 'vue-iscroll-view';
 /* Using these kinds of IScroll class for different cases. */
 import IScroll from 'iscroll';
 
+import Validator from 'vue-validator';
+Vue.use(Validator);
+
+Vue.validator('phone', val => /^1[3|4|5|8][0-9]\d{4,8}$/.test(val));
+
 Vue.use(VueResource);
 Vue.use(VueRouter);
 Vue.use(Vuex);

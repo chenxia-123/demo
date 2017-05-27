@@ -2,52 +2,25 @@
 	<div class="login">
 		<div class="mainbox">
 			<div class="yk-logo"></div>
-			<div class="form-box">
-				<ul>
-					<li>
-						<input type="tel" class="form-input" placeholder="请输入大陆11位手机号码" />
-					</li>
-					<li>
-						<input type="number" class="form-input w-p-60" placeholder="请输入手机验证码" />
-						<a href="javascript:;" class="btn-vcode fr">发送验证码</a>
-					</li>
-					<li>
-						<input type="text" class="form-input" placeholder="请输入专属邀请码" />
-					</li>
-					<li>
-						<input type="tel" class="form-input" placeholder="请输入大陆11位手机号码" />
-					</li>
-					<li>
-						<input type="number" class="form-input w-p-60" placeholder="请输入手机验证码" />
-						<a href="javascript:;" class="btn-vcode fr">发送验证码</a>
-					</li>
-					<li>
-						<input type="text" class="form-input" placeholder="请输入专属邀请码" />
-					</li>
-					<li>
-						<input type="tel" class="form-input" placeholder="请输入大陆11位手机号码" />
-					</li>
-					<li>
-						<input type="number" class="form-input w-p-60" placeholder="请输入手机验证码" />
-						<a href="javascript:;" class="btn-vcode fr">发送验证码</a>
-					</li>
-					<li>
-						<input type="text" class="form-input" placeholder="请输入专属邀请码" />
-					</li>
-					<li>
-						<input type="tel" class="form-input" placeholder="请输入大陆11位手机号码" />
-					</li>
-					<li>
-						<input type="number" class="form-input w-p-60" placeholder="请输入手机验证码" />
-						<a href="javascript:;" class="btn-vcode fr">发送验证码</a>
-					</li>
-					<li>
-						<input type="text" class="form-input" placeholder="请输入专属邀请码" />
-					</li>
-				</ul>
-				<a href="javascript:;" class="btn" @click="tip">登录</a>
-				<alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
-			</div>
+			<tip :toastshow.sync="toastshow" :toasttext="toasttext"></tip>
+			<validator name="register">
+				<div class="form-box">
+					<ul>
+						<li>
+							<input type="tel" class="form-input" placeholder="请输入大陆11位手机号码" @invalid="telonInvalid" initial="off" detect-change="off" v-model="telphone" id="telphone" v-validate:telphone="['tel']"/>
+						</li>
+						<li>
+							<input type="number" class="form-input w-p-60" placeholder="请输入手机验证码" @invalid="passwInvalid" v-model="passw" initial="off" detect-change="off" id="passw" v-validate:passw="['passw']"/>
+							<a href="javascript:;" class="btn-vcode fr" @click="tip">发送验证码</a>
+						</li>
+						<li>
+							<input type="text" class="form-input" placeholder="请输入专属邀请码" @invalid="passwInvalid1" v-model="passw1" initial="off" detect-change="off" id="passw1" v-validate:passw1="['passw1']"/>
+						</li>
+					</ul>
+					<a href="javascript:;" class="btn" @click="register_user()">登录</a>
+					<alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :title="title"></alert-tip>
+				</div>
+			</validator>	
 		</div>
 		<div class="foot-logo"></div>
 	</div>
@@ -55,23 +28,54 @@
 
 <script>
 import alertTip from '../alertTip/alertTip';
+import tip from '../common/tip';
 export default {
     data () {
         return {
-            showAlert: false
+            showAlert: false,
+            telphone: '',
+            toastshow: false,
+            toasttext: '',
+            passw: '',
+            passw1: ''
         };
     },
     methods: {
         tip() {
             this.showAlert = true;
-            this.alertText = '端午来了，你吃咸粽还是甜粽？大家分肯德基饭卡道具卡就疯狂老地方就爱看打飞机快递费就减肥咖啡机读卡防静电服骄傲聚少离多道具卡加快递费金卡戴珊家啊啊开发';
+            this.title = '端午来了，你吃咸粽还是甜粽？';
         },
         closeTip() {
             this.showAlert = false;
+        },
+        telonInvalid() {
+            this.$set('toasttext', '手机号码格式不正确');
+            this.$set('toastshow', true);
+        },
+        passwInvalid() {
+            this.$set('toasttext', '验证码错误');
+            this.$set('toastshow', true);
+        },
+        passwInvalid1() {
+            this.$set('toasttext', '邀请码错误');
+            this.$set('toastshow', true);
+        },
+        register_user() {
+            const that = this;
+            that.$validate(true, function() {
+                if (that.$register.invalid) {
+                    that.$set('toasttext', '请完善表单');
+                    that.$set('toastshow', true);
+                } else {
+                    that.$set('toasttext', '验证通过');
+                    that.$set('toastshow', true);
+                };
+            });
         }
     },
     components: {
-        alertTip
+        alertTip,
+        tip
     }
 };
 </script>
@@ -102,7 +106,7 @@ export default {
 	.login {
 		width: 100%;
 		height: 100%;
-		overflow: auto;
+		overflow: hidden;
 	}
 	.foot-logo{
 		position:fixed;
